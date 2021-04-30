@@ -3,7 +3,6 @@ CREATE TABLE "Bands" (
   "Id"  SERIAL PRIMARY KEY,
   "Name"   TEXT,
   "CountryOfOrigin"  TEXT,
-  "NumberOfMembers"  INT,
   "Website"  TEXT,
   "Style"   TEXT,
   "IsSigned"   BOOLEAN,
@@ -50,7 +49,8 @@ CREATE TABLE "Musicians" (
 CREATE TABLE "BandMembers" (
   "Id"       SERIAL PRIMARY KEY,
   "BandId"  INTEGER NULL REFERENCES "Bands" ("Id"),
-  "MusicianId"  INTEGER NULL REFERENCES "Musicians" ("Id")
+  "MusicianId"  INTEGER NULL REFERENCES "Musicians" ("Id"),
+  "CurrentMember" BOOLEAN
 );
 -------------------------------------------------------------
 -------------------------------------------------------------

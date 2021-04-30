@@ -60,6 +60,13 @@ Top Tips:
 --Also include the foreign keys when making your CREATE TABLE statements. 
 --You might have to create your tables in a specific order
 
+
+TO-DO:
+- Fill out description functions for classes 
+  and any other internal functions that may be needed
+- Start writing functions for menu options using Linq stmts to manipulate SQL database
+- Flesh out some examples
+- 
 */
 namespace RhythmsGonnaGetYou
 {
@@ -68,12 +75,19 @@ namespace RhythmsGonnaGetYou
         public int Id { get; set; }
         public string Name { get; set; }
         public string CountryOfOrigin { get; set; }
-        public int NumberOfMembers { get; set; }
+        // public int NumberOfMembers { get; set; } ==>> handled by BandMembers List
         public string Website { get; set; }
         public string Style { get; set; }
         public bool IsSigned { get; set; }
         public string ContactName { get; set; }
         public string ContactPhoneNumber { get; set; }
+        public List<Album> Albums { get; set; }
+        public List<Concert> Concerts { get; set; }
+        public List<BandMember> BandMembers { get; set; }
+        public string Description()
+        {
+            return "";
+        }
     }
     class Album
     {
@@ -83,6 +97,12 @@ namespace RhythmsGonnaGetYou
         public bool IsExplicit { get; set; }
         public int ReleaseDate { get; set; }
         public int BandId { get; set; }
+        public Band Band { get; set; }
+        public List<Song> songs { get; set; }
+        public string Description()
+        {
+            return "";
+        }
     }
     class Song
     {
@@ -91,6 +111,11 @@ namespace RhythmsGonnaGetYou
         public TimeSpan Duration { get; set; }
         public int TrackNumber { get; set; }
         public int AlbumId { get; set; }
+        public Album Album { get; set; }
+        public string Description()
+        {
+            return "";
+        }
     }
     class Concert
     {
@@ -99,6 +124,11 @@ namespace RhythmsGonnaGetYou
         public string WherePerformed { get; set; }
         public int NumberOfPeopleAtConcert { get; set; }
         public int BandId { get; set; }
+        public Band Band { get; set; }
+        public string Description()
+        {
+            return "";
+        }
     }
     class Musician
     {
@@ -107,6 +137,11 @@ namespace RhythmsGonnaGetYou
         public int Age { get; set; }
         public string MusicianPhoneNumber { get; set; }
         public string Instrument { get; set; }
+        public List<BandMember> BandMembers { get; set; }
+        public string Description()
+        {
+            return "";
+        }
     }
     class BandMember
     {
@@ -115,6 +150,7 @@ namespace RhythmsGonnaGetYou
         public int MusicianId { get; set; }
         public Band Band { get; set; }
         public Musician Musician { get; set; }
+        public bool CurrentMember { get; set; }
     }
     class RecordLabelContext : DbContext
     {
@@ -136,33 +172,36 @@ namespace RhythmsGonnaGetYou
         static string Menu()
         {
             Console.WriteLine("What do you want to do?");
-
+            Console.WriteLine();
             Console.WriteLine("(1) View all the bands");
             Console.WriteLine("(2) View all bands that are signed");
             Console.WriteLine("(3) View all bands that are not signed");
             Console.WriteLine("(4) Add a new band");
             Console.WriteLine("(5) Let a band go (update isSigned to false)");
             Console.WriteLine("(6) Resign a band (update isSigned to true)");
-
-            Console.WriteLine("(11) View albums in a genre");
+            Console.WriteLine();
+            Console.WriteLine("(7) View albums in a genre");
             Console.WriteLine("(8) View all albums ordered by ReleaseDate");
-            Console.WriteLine("(7) Prompt for a band name and view all their albums");
-            Console.WriteLine("(3) Add an album for a band");
-            Console.WriteLine("(4) Add a song to an album");
-
+            Console.WriteLine("(9) Prompt for a band name and view all their albums");
+            Console.WriteLine("(10) Add an album for a band");
+            Console.WriteLine("(11) Add a song to an album");
+            Console.WriteLine();
             Console.WriteLine("(12) View all members of a band");
-            Console.WriteLine("(16) View all bands that a musician is a member of");
-            Console.WriteLine("(17) View all musicians");
-            Console.WriteLine("(13) Add musician to band");
-            Console.WriteLine("(14) Remove musician from band");
-            Console.WriteLine("(15) Create new musician");
-
-            Console.WriteLine("(18) View all past concerts");
-            Console.WriteLine("(19) View upcoming concerts");
-            Console.WriteLine("(20) View number of fans at a concert");
-
+            Console.WriteLine("(13) View current members of a band");
+            Console.WriteLine("(14) View past members of a band");
+            Console.WriteLine("(15) View all bands that a musician is a member of");
+            Console.WriteLine("(16) View all musicians");
+            Console.WriteLine("(17) Add musician to band");
+            Console.WriteLine("(18) Remove musician from band");
+            Console.WriteLine("(19) Create new musician");
+            Console.WriteLine();
+            Console.WriteLine("(20) View all past concerts");
+            Console.WriteLine("(21) View upcoming concerts");
+            Console.WriteLine("(22) View number of fans at a concert");
+            Console.WriteLine();
             Console.WriteLine("(Q)uit");
-            var choice = Console.ReadLine().ToUpper();
+            var acceptableInput = new List<string> { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "Q" };
+            var choice = Console.ReadLine();
             return choice;
         }
         static void Main(string[] args)
@@ -236,6 +275,12 @@ namespace RhythmsGonnaGetYou
                     case "20":
                         Console.Clear();
                         break;
+                    case "22":
+                        Console.Clear();
+                        break;
+                    case "21":
+                        Console.Clear();
+                        break;
                     case "Q":
                         Console.WriteLine("Closing application");
                         Console.WriteLine("");
@@ -253,7 +298,7 @@ namespace RhythmsGonnaGetYou
                         }
                         else
                         {
-                            Console.WriteLine("Press C, D, W, T, V,or Q to select one of the options, then press Enter.");
+                            Console.WriteLine("Press select an option and press Enter");
                             Console.WriteLine("");
                         }
                         break;
@@ -265,17 +310,6 @@ namespace RhythmsGonnaGetYou
 }
 
 
-// // namespace SuncoastMovies
-// {
-
-
-
-
-//     class Program
-//     {
-
-//         static void Main(string[] args)
-//         {
 
 //             var context = new SuncoastMoviesContext();
 //             var movies = context.Movies;
