@@ -75,7 +75,7 @@ namespace RhythmsGonnaGetYou
         public Band Band { get; set; }
         public void Description()
         {
-            Console.WriteLine($"Performed At: {WherePerformed}, Performed For: {NumberOfPeopleAtConcert} people, Date of Performance: {WhenPerformed}");
+            Console.WriteLine($"Performed in: {WherePerformed}, Performed For: {NumberOfPeopleAtConcert} people, Date of Performance: {WhenPerformed}");
         }
     }
     //----------------------------------------------------------------------------------------------------------------
@@ -504,6 +504,49 @@ namespace RhythmsGonnaGetYou
             Console.WriteLine("Added to the database.");
             Console.WriteLine();
         }
+        static void CreateAConcert()
+        {
+            Console.Clear();
+            var context = new RecordLabelContext();
+            Concert newConcert = new Concert();
+            //             public DateTime WhenPerformed { get; set; }
+
+            Console.Write("Type the location of the new concert and press Enter: ");
+            newConcert.WherePerformed = Console.ReadLine();
+            Console.Write("Type the date of the new concert as follows, 01/01/2000, and press Enter: ");
+            var newConcertDate = Console.ReadLine();
+            newConcert.WhenPerformed = DateTime.Parse(newConcertDate);
+            Console.Write("Type the number of people at the concert and press Enter: ");
+            var newConcertPeople = Console.ReadLine().ToLower();
+            newConcert.NumberOfPeopleAtConcert = int.Parse(newConcertPeople);
+            var selectingBand = true;
+            var bandForConcert = new Band();
+            while (selectingBand)
+            {
+                Console.Write("Please select a band to assign concert to (Type the band's name then press Enter): ");
+                var bandSelection = Console.ReadLine();
+                if (context.Bands.FirstOrDefault(band => band.Name == bandSelection) != null)
+                {
+                    bandForConcert = context.Bands.FirstOrDefault(band => band.Name == bandSelection);
+                    selectingBand = false;
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("There is no band by that name in the database");
+                    Console.WriteLine();
+                    Console.WriteLine("Please try again");
+                }
+            }
+            Console.WriteLine($"Concert assigned to {bandForConcert.Name}");
+            newConcert.BandId = bandForConcert.Id;
+            context.Concerts.Add(newConcert);
+            context.SaveChanges();
+            Console.WriteLine();
+            newConcert.Description();
+            Console.WriteLine("Added to the database.");
+            Console.WriteLine();
+        }
         //----------------------------------------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------------------------------------
@@ -813,7 +856,7 @@ namespace RhythmsGonnaGetYou
             Console.WriteLine("");
             Console.WriteLine("(6) Resign a band                        (12) Add an album for a band                            (18) Add new musician");
             Console.WriteLine("");
-            Console.WriteLine("(19) View all bands that a musician      (Q) Quit");
+            Console.WriteLine("(19) View all bands that a musician      (20) Add a concert                                      (Q) Quit");
             Console.WriteLine("     is or has been a member of");
             Console.WriteLine();
             Console.Write("Select one of the options in parentheses and press Enter: ");
@@ -889,6 +932,9 @@ namespace RhythmsGonnaGetYou
                         break;
                     case "19":
                         ViewMusiciansBands();
+                        break;
+                    case "20":
+                        CreateAConcert();
                         break;
                     case "Q":
                         Console.Clear();
