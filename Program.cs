@@ -12,8 +12,8 @@ Problem =>
 --Model and create a database for a record label company that stores our bands, albums, and songs. 
 --Create a console app that allows a user to store and manage the company's bands, albums, and songs.
 
---(1)Create a menu system that shows the following options to the user 
---(2)until they choose to quit your program =>
+--Create a menu system that shows the following options to the user 
+--until they choose to quit your program =>
 --(1)Add a new band- 
 --(2)View all the bands- could make this a sorted list too
 --(3)Add an album for a band-
@@ -90,72 +90,6 @@ namespace RhythmsGonnaGetYou
             Console.WriteLine($"Website: {Website}, Style: {Style}, Signed to Record Label: {IsSigned}");
             Console.WriteLine($"Contact Name: {ContactName}, Contact Phone Number: {ContactPhoneNumber}");
         }
-        public void ListAlbums()
-        {
-            Console.WriteLine();
-            Console.WriteLine("Listing Band's Albums:");
-            Console.WriteLine();
-            var count = 1;
-            foreach (var album in Albums)
-            {
-                Console.Write($"{count}: ");
-                album.Description();
-                count += 1;
-            }
-            Console.WriteLine();
-        }
-        public void ListConcerts()
-        {
-            Console.WriteLine();
-            Console.WriteLine("Listing Band's Concerts:");
-            Console.WriteLine();
-            var count = 1;
-            foreach (var concert in Concerts)
-            {
-                Console.Write($"{count}: ");
-                concert.Description();
-                count += 1;
-            }
-            Console.WriteLine();
-        }
-        public void ListPastBandMembers()
-        {
-            Console.WriteLine();
-            Console.WriteLine("Listing Band's Past Members:");
-            Console.WriteLine();
-            var count = 1;
-            foreach (var bandMember in BandMembers.Where(bandMember => bandMember.CurrentMember == false))
-            {
-                Console.Write($"{count}: ");
-                bandMember.Musician.Description();
-                count += 1;
-            }
-            Console.WriteLine();
-        }
-        public void ListCurrentBandMembers()
-        {
-            Console.WriteLine();
-            Console.WriteLine("Listing Band's Current Members:");
-            Console.WriteLine();
-            var count = 1;
-            foreach (var bandMember in BandMembers.Where(bandMember => bandMember.CurrentMember == true))
-            {
-                Console.Write($"{count}: ");
-                bandMember.Musician.Description();
-                count += 1;
-            }
-            Console.WriteLine();
-        }
-        public void LetBandGo()
-        {
-            Console.WriteLine("Band no longer signed to label");
-            IsSigned = false;
-        }
-        public void ResignBand()
-        {
-            Console.WriteLine("Band resigned to label");
-            IsSigned = true;
-        }
     }
     class Album
     {
@@ -169,21 +103,7 @@ namespace RhythmsGonnaGetYou
         public List<Song> Songs { get; set; }
         public void Description()
         {
-            Console.WriteLine($"Album Title: {.Title}, Band: {Band.Name}, Genre: {Genre}, Explicit: {IsExplicit.ToString().ToUpper()}, Release Date: {ReleaseDate}");
-        }
-        public void ListSongs()
-        {
-            Console.WriteLine();
-            Console.WriteLine("Listing Album's Songs:");
-            Console.WriteLine();
-            var count = 1;
-            foreach (var song in Songs)
-            {
-                Console.Write($"{count}: ");
-                song.Description();
-                count += 1;
-            }
-            Console.WriteLine();
+            Console.WriteLine($"Album Title: {Title}, Genre: {Genre}, Explicit: {IsExplicit.ToString().ToUpper()}, Release Date: {ReleaseDate}");
         }
     }
     class Song
@@ -196,7 +116,7 @@ namespace RhythmsGonnaGetYou
         public Album Album { get; set; }
         public void Description()
         {
-            Console.WriteLine($"Song Title: {Title}, Album: {Album.Title}, Track Number: {TrackNumber}, Length of Song: {Duration}");
+            Console.WriteLine($"Song Title: {Title}, Track Number: {TrackNumber}, Length of Song: {Duration}");
         }
     }
     class Concert
@@ -209,7 +129,7 @@ namespace RhythmsGonnaGetYou
         public Band Band { get; set; }
         public void Description()
         {
-            Console.WriteLine($"Performing Band: {Band.Name}, Performed At: {WherePerformed}, Performed For: {NumberOfPeopleAtConcert} people, Date of Performance: {WhenPerformed}");
+            Console.WriteLine($"Performed At: {WherePerformed}, Performed For: {NumberOfPeopleAtConcert} people, Date of Performance: {WhenPerformed}");
         }
     }
     class Musician
@@ -259,9 +179,9 @@ namespace RhythmsGonnaGetYou
         public int Id { get; set; }
         public int BandId { get; set; }
         public int MusicianId { get; set; }
+        public bool CurrentMember { get; set; }
         public Band Band { get; set; }
         public Musician Musician { get; set; }
-        public bool CurrentMember { get; set; }
         public void AddMusicianBackToBand()
         {
             Console.WriteLine("Reinstating musician in band");
@@ -283,87 +203,577 @@ namespace RhythmsGonnaGetYou
         public DbSet<BandMember> BandMembers { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
-            optionsBuilder.UseLoggerFactory(loggerFactory);
+            // var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole());
+            // optionsBuilder.UseLoggerFactory(loggerFactory);
             optionsBuilder.UseNpgsql("server=localhost;database=RecordLabelDatabase"); // Connects to Db
         }
     }
+    // class LabelDatabase
+    // {
+
+
+
+
+    //     }
+    // }
 
     class Program
     {
-        static Band SelectABand(DbContext context)
+        // static Band SelectABand() >>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Why didn't Band object it returned work in other functions??
+        // {
+        //     var context = new RecordLabelContext();
+        //     Console.Clear();
+        //     var selectingBand = true;
+        //     var selectedBand = new Band();
+        //     while (selectingBand)
+        //     {
+        //         Console.Write("Please select a band (Type the band's name then press Enter): ");
+        //         var bandSelection = Console.ReadLine();
+        //         if (context.Bands.FirstOrDefault(band => band.Name == bandSelection) != null)
+        //         {
+        //             selectedBand = context.Bands.FirstOrDefault(band => band.Name == bandSelection);
+        //             selectingBand = false;
+        //         }
+        //         else
+        //         {
+        //             Console.WriteLine();
+        //             Console.WriteLine("There is no band by that name in the database");
+        //             Console.WriteLine();
+        //             Console.WriteLine("Please try again");
+        //         }
+        //     }
+        //     return selectedBand;
+        // }
+        static Musician SelectAMusician()
         {
-            Console.Write("Enter band's name: ");
-            var selectedBandName = Console.ReadLine();
-            var selectedBand = new Band(); // To prevent error
-            return selectedBand;
-        }
-        static Musician SelectAMusician(DbContext context)
-        {
-            Console.Write("Enter musician's name: ");
-            var selectedMusicianName = Console.ReadLine();
-            var selectedMusician = new Musician(); // To prevent error
+            var context = new RecordLabelContext();
+            Console.Clear();
+            var selectingMusician = true;
+            var selectingCounter = 0;
+            var selectedMusician = new Musician();
+            while (selectingMusician)
+            {
+                Console.Write("Please select a musician (Type the musician's name then press Enter): ");
+                var musicianSelection = Console.ReadLine();
+                if (context.Musicians.FirstOrDefault(musician => musician.Name == musicianSelection) != null)
+                {
+                    selectedMusician = context.Musicians.FirstOrDefault(musician => musician.Name == musicianSelection);
+                    selectingMusician = false;
+                }
+                else if (selectingCounter > 3)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("There is no musician by that name in the database");
+                    Console.WriteLine();
+                    Console.WriteLine("Quitting to menu");
+                    selectingMusician = false;
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("There is no band by that name in the database");
+                    Console.WriteLine();
+                    Console.WriteLine("Please try again");
+                    selectingCounter += 1;
+                }
+            }
             return selectedMusician;
         }
-        static Album SelectAnAlbum(DbContext context)
-        {
-            var selectedBand = SelectABand(context);
-            Console.Write("Enter album's name: ");
-            var selectedAlbumName = Console.ReadLine();
-            var selectedAlbum = new Album(); // To prevent error
-            return selectedAlbum;
-        }
-        static BandMember SelectABandMember(DbContext context)
-        {
-            var selectedBand = SelectABand(context);
-            var selectedMusician = SelectAMusician(context);
-            var selectedBandMember = selectedMusician.BandMembers.FirstOrDefault(bandMember => bandMember.BandId == selectedBand.Id);
-            return selectedBandMember;
-        }
-        static void ViewAllSignedBands(DbContext context)
-        {
+        // static Album SelectAnAlbum()
+        // {
+        //     var context = new RecordLabelContext();
+        //     Console.Clear();
+        //     var selectingAlbum = true;
+        //     var selectingCounter = 0;
+        //     var selectedAlbum = new Album();
+        //     while (selectingAlbum)
+        //     {
+        //         Console.Write("Please select an album (Type the album's title then press Enter): ");
+        //         var albumSelection = Console.ReadLine();
+        //         if (context.Albums.FirstOrDefault(album => album.Title == albumSelection) != null)
+        //         {
+        //             selectedAlbum = context.Albums.FirstOrDefault(album => album.Title == albumSelection);
+        //             selectingAlbum = false;
+        //         }
+        //         else if (selectingCounter > 3)
+        //         {
+        //             Console.WriteLine();
+        //             Console.WriteLine("There is no album by that name in the database");
+        //             Console.WriteLine();
+        //             Console.WriteLine("Quitting to menu");
+        //             selectingAlbum = false;
+        //         }
+        //         else
+        //         {
+        //             Console.WriteLine();
+        //             Console.WriteLine("There is no album by that name in the database");
+        //             Console.WriteLine();
+        //             Console.WriteLine("Please try again");
+        //             selectingCounter += 1;
+        //         }
+        //     }
+        //     return selectedAlbum;
+        // }
 
-        }
-        static void ViewAllUnsignedBands(DbContext context)
-        {
+        // static BandMember SelectABandMember(DbContext context)
+        // {
+        //     using (var context = new RecordLabelContext())
+        //     {
+        //         Console.Clear();
+        //         var selectingBandMember = true;
+        //         var selectingCounter = 0;
+        //         var selectedBand = new Band();
+        //         while (selectingBand)
+        //         {
+        //             Console.Write("Please select a band (Type the band's name then press Enter): ");
+        //             var bandSelection = Console.ReadLine();
+        //             if (context.Bands.FirstOrDefault(band => band.Name == bandSelection) != null)
+        //             {
+        //                 selectedBand = context.Bands.FirstOrDefault(band => band.Name == bandSelection);
+        //                 selectingBand = false;
+        //             }
+        //             else if (selectingCounter > 3)
+        //             {
+        //                 Console.WriteLine();
+        //                 Console.WriteLine("There is no band by that name in the database");
+        //                 Console.WriteLine();
+        //                 Console.WriteLine("Quitting to menu");
+        //                 selectingBand = false;
+        //             }
+        //             else
+        //             {
+        //                 Console.WriteLine();
+        //                 Console.WriteLine("There is no band by that name in the database");
+        //                 Console.WriteLine();
+        //                 Console.WriteLine("Please try again");
+        //                 selectingCounter += 1;
+        //             }
+        //         }
+        //         return selectedBand;
+        //     }
 
-        }
-        static void ViewAlbumsInAGenre(DbContext context)
-        {
+        // static void ViewAllSignedBands(DbContext context)
+        // {
 
-        }
-        static void ViewAlbumsOrderedByReleaseDate(DbContext context)
-        {
+        // }
+        // static void ViewAllUnsignedBands(DbContext context)
+        // {
 
-        }
-        static void ViewAllMusicians(DbContext context)
+        // }
+        static void ViewAlbumsSongs()
         {
+            var context = new RecordLabelContext();
+            Console.Clear();
+            var selectingAlbum = true;
+            var selectedAlbum = new Album();
+            while (selectingAlbum)
+            {
+                Console.Write("Please select an album (Type the album's title then press Enter): ");
+                var albumSelection = Console.ReadLine();
+                if (context.Albums.FirstOrDefault(album => album.Title == albumSelection) != null)
+                {
+                    selectedAlbum = context.Albums.FirstOrDefault(album => album.Title == albumSelection);
+                    selectingAlbum = false;
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("There is no album by that name in the database");
+                    Console.WriteLine();
+                    Console.WriteLine("Please try again");
+                }
+            }
+            Console.WriteLine();
+            Console.WriteLine("Listing Album's Songs:");
+            Console.WriteLine();
+            var count = 1;
+            foreach (var song in context.Songs.Include(song => song.Album).Where(song => song.Album.Id == selectedAlbum.Id))
+            {
+                Console.Write($"{count}: ");
+                song.Description();
+                Console.WriteLine();
+                count += 1;
+            }
+        }
+        static void ViewAllBands()
+        {
+            var context = new RecordLabelContext();
+            Console.Clear();
+            Console.WriteLine();
+            foreach (var band in context.Bands)
+            {
+                band.Description();
+                Console.WriteLine();
+            }
+        }
+        static void ViewAllBandsThatAreSigned()
+        {
+            var context = new RecordLabelContext();
+            Console.Clear();
+            foreach (var band in context.Bands.Where(band => band.IsSigned == true))
+            {
+                band.Description();
+            }
+        }
+        static void ViewAllUnsignedBands()
+        {
+            var context = new RecordLabelContext();
+            Console.Clear();
+            foreach (var band in context.Bands.Where(band => band.IsSigned == false))
+            {
+                band.Description();
+            }
+        }
 
-        }
-        static Band CreateBand(DbContext context)
+        static void ViewAlbumsInAGenre()
         {
+            var context = new RecordLabelContext();
+            Console.Clear();
+            Console.WriteLine("Album genre: ");
+            var genreSelection = Console.ReadLine();
+            var counterForGenreDisplay = 1;
+            foreach (var album in context.Albums.Where(album => album.Genre == genreSelection))
+            {
+                Console.Write($"{counterForGenreDisplay}: ");
+                album.Description();
+                counterForGenreDisplay += 1;
+            }
+        }
+        static void ViewAlbumsOrderedByReleaseDate()
+        {
+            var context = new RecordLabelContext();
+            Console.Clear();
+            var counterForOrderedDisplay = 1;
+            Console.WriteLine();
+            foreach (var album in context.Albums.OrderBy(album => album.ReleaseDate))
+            {
+                Console.Write($"{counterForOrderedDisplay}: ");
+                album.Description();
+                counterForOrderedDisplay += 1;
+            }
+        }
+        static void ViewAllBandsAlbums()
+        {
+            var context = new RecordLabelContext();
+            Console.Clear();
+            var selectingBand = true;
+            var bandSelectionDisplayAlbums = new Band();
+            while (selectingBand)
+            {
+                Console.Write("Please select a band (Type the band's name then press Enter): ");
+                var bandSelection = Console.ReadLine();
+                if (context.Bands.FirstOrDefault(band => band.Name == bandSelection) != null)
+                {
+                    bandSelectionDisplayAlbums = context.Bands.FirstOrDefault(band => band.Name == bandSelection);
+                    selectingBand = false;
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("There is no band by that name in the database");
+                    Console.WriteLine();
+                    Console.WriteLine("Please try again");
+                }
+            }
+            foreach (var album in context.Albums.Include(album => album.Band).Where(album => album.Band == bandSelectionDisplayAlbums))
+            {
+                Console.WriteLine();
+                album.Description();
+            }
+        }
+        static void ViewConcerts()
+        {
+            var context = new RecordLabelContext();
+            Console.Clear();
+            var bandSelectionConcerts = new Band();
+            var selectingBandConcerts = true;
+            while (selectingBandConcerts)
+            {
+                Console.Write("Please select a band to assign the album to (Type the band's name then press Enter): ");
+                var bandSelection = Console.ReadLine();
+                if (context.Bands.FirstOrDefault(band => band.Name == bandSelection) != null)
+                {
+                    bandSelectionConcerts = context.Bands.FirstOrDefault(band => band.Name == bandSelection);
+                    selectingBandConcerts = false;
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("There is no band by that name in the database");
+                    Console.WriteLine();
+                    Console.WriteLine("Please try again");
+                }
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Listing Band's Concerts:");
+            Console.WriteLine();
+            var count = 1;
+            foreach (var concert in context.Concerts.Include(concert => concert.Band).Where(concert => concert.Band == bandSelectionConcerts))
+            {
+                Console.Write($"{count}: ");
+                concert.Description();
+                count += 1;
+            }
+            Console.WriteLine();
+        }
+        static void ViewAllMusicians()
+        {
+            var context = new RecordLabelContext();
+            Console.Clear();
+            Console.WriteLine();
+            foreach (var musician in context.Musicians.OrderBy(musician => musician.Name))
+            {
+                musician.Description();
+                Console.WriteLine();
+            }
+        }
+        static void CreateBand()
+        {
+            Console.Clear();
+            var context = new RecordLabelContext();
             Band newBand = new Band();
-            return newBand;
+            Console.Write("Type the new band's name and press Enter: ");
+            newBand.Name = Console.ReadLine();
+            Console.Write("Type the new band's country of origin and press Enter: ");
+            newBand.CountryOfOrigin = Console.ReadLine();
+            Console.Write("Type the URL of the new band's website and press Enter: ");
+            newBand.Website = Console.ReadLine();
+            Console.Write("Type the new band's music style and press Enter: ");
+            newBand.Style = Console.ReadLine();
+            Console.Write("If the band is signed, type true and press Enter. If the band isn't signed, type false and press Enter: ");
+            var isSignedInput = Console.ReadLine().ToLower();
+            newBand.IsSigned = bool.Parse(isSignedInput);
+            Console.Write("Type the name of the new band's primary contact and press Enter: ");
+            newBand.ContactName = Console.ReadLine();
+            Console.Write("Type the phone number of the new band's contact and press Enter: ");
+            newBand.ContactPhoneNumber = Console.ReadLine();
+            context.Bands.Add(newBand);
+            context.SaveChanges();
+            Console.WriteLine();
+            newBand.Description();
+            Console.WriteLine("Added to the database.");
+            Console.WriteLine();
         }
-        static Musician CreateMusician(DbContext context)
+        private static void LetBandGo()
         {
+            var context = new RecordLabelContext();
+            Console.Clear();
+            var selectingBand = true;
+            var selectedBandToLetGo = new Band();
+            while (selectingBand)
+            {
+                Console.Write("Please select a band (Type the band's name then press Enter): ");
+                var bandSelection = Console.ReadLine();
+                if (context.Bands.FirstOrDefault(band => band.Name == bandSelection) != null)
+                {
+                    selectedBandToLetGo = context.Bands.FirstOrDefault(band => band.Name == bandSelection);
+                    selectingBand = false;
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("There is no band by that name in the database");
+                    Console.WriteLine();
+                    Console.WriteLine("Please try again");
+                }
+            }
+            selectedBandToLetGo.IsSigned = false;
+            Console.WriteLine();
+            Console.WriteLine("Band no longer signed to label");
+            context.SaveChanges();
+        }
+        private static void ResignBand()
+        {
+            var context = new RecordLabelContext();
+            Console.Clear();
+            var selectingBand = true;
+            var selectedBandToResign = new Band();
+            while (selectingBand)
+            {
+                Console.Write("Please select a band (Type the band's name then press Enter): ");
+                var bandSelection = Console.ReadLine();
+                if (context.Bands.FirstOrDefault(band => band.Name == bandSelection) != null)
+                {
+                    selectedBandToResign = context.Bands.FirstOrDefault(band => band.Name == bandSelection);
+                    selectingBand = false;
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("There is no band by that name in the database");
+                    Console.WriteLine();
+                    Console.WriteLine("Please try again");
+                }
+            }
+            selectedBandToResign.IsSigned = true;
+            Console.WriteLine();
+            Console.WriteLine("Band resigned to label");
+            context.SaveChanges();
+        }
+        static void CreateMusician()
+        {
+            var context = new RecordLabelContext();
             Musician newMusician = new Musician();
-            return newMusician;
+            Console.Write("Type the new musician's name and press Enter: ");
+            newMusician.Name = Console.ReadLine();
+            Console.Write("Type the new musician's age and press Enter: ");
+            var newMusicianAge = Console.ReadLine();
+            newMusician.Age = int.Parse(newMusicianAge);
+            Console.Write("Type the new musician's phone number and press Enter: ");
+            newMusician.MusicianPhoneNumber = Console.ReadLine();
+            Console.Write("Type the new musician's instrument and press Enter: ");
+            newMusician.Instrument = Console.ReadLine();
+            context.Musicians.Add(newMusician);
+            context.SaveChanges();
+            Console.WriteLine();
+            newMusician.Description();
+            Console.WriteLine("Added to the database.");
+            Console.WriteLine();
         }
         static BandMember CreateBandMember(DbContext context) // adds musician to band they've never been a part of
         {
             BandMember newBandMember = new BandMember();
             return newBandMember;
         }
-        static Song CreateSong(DbContext context)
+        static void CreateSong()
         {
+            Console.Clear();
+            var context = new RecordLabelContext();
             Song newSong = new Song();
-            return newSong;
+            Console.Write("Type the new song's title and press Enter: ");
+            newSong.Title = Console.ReadLine();
+            Console.Write("Type the duration of the new song in the following format, 00:02:30 (2 minutes and 30 seconds), and press Enter: ");
+            var newSongDuration = Console.ReadLine();
+            newSong.Duration = TimeSpan.Parse(newSongDuration);
+            Console.Write("Type the track number of the new song and press Enter: ");
+            var newSongTrackNumber = Console.ReadLine();
+            newSong.TrackNumber = int.Parse(newSongTrackNumber);
+            var selectingAlbum = true;
+            var albumForSong = new Album();
+            while (selectingAlbum)
+            {
+                Console.Write("Please select an album (Type the album's title then press Enter): ");
+                var albumSelection = Console.ReadLine();
+                if (context.Albums.FirstOrDefault(album => album.Title == albumSelection) != null)
+                {
+                    albumForSong = context.Albums.FirstOrDefault(album => album.Title == albumSelection);
+                    selectingAlbum = false;
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("There is no album by that name in the database");
+                    Console.WriteLine();
+                    Console.WriteLine("Please try again");
+                }
+            }
+            Console.WriteLine($"{newSong.Title} assigned to {albumForSong.Title}");
+            newSong.AlbumId = albumForSong.Id;
+            context.Songs.Add(newSong);
+            context.SaveChanges();
+            Console.WriteLine();
+            newSong.Description();
+            Console.WriteLine("Added to the database.");
+            Console.WriteLine();
         }
-        static Album CreateAlbum(DbContext context)
+        static void CreateAlbum()
         {
+            Console.Clear();
+            var context = new RecordLabelContext();
             Album newAlbum = new Album();
-            return newAlbum;
+            Console.Write("Type the new album's title and press Enter: ");
+            newAlbum.Title = Console.ReadLine();
+            Console.Write("Type the new album's genre and press Enter: ");
+            newAlbum.Genre = Console.ReadLine();
+            Console.Write("Type true and press Enter if the new album is explicit. Type false and press Enter if the new album is not explicit: ");
+            var newAlbumExplicit = Console.ReadLine().ToLower();
+            newAlbum.IsExplicit = bool.Parse(newAlbumExplicit);
+            Console.Write("Type the new album's release date in the following format, 01/01/2000, and press Enter: ");
+            var newAlbumReleaseDate = Console.ReadLine();
+            newAlbum.ReleaseDate = DateTime.Parse(newAlbumReleaseDate);
+            var selectingBand = true;
+            var bandForAlbum = new Band();
+            while (selectingBand)
+            {
+                Console.Write("Please select a band to assign the album to (Type the band's name then press Enter): ");
+                var bandSelection = Console.ReadLine();
+                if (context.Bands.FirstOrDefault(band => band.Name == bandSelection) != null)
+                {
+                    bandForAlbum = context.Bands.FirstOrDefault(band => band.Name == bandSelection);
+                    selectingBand = false;
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("There is no band by that name in the database");
+                    Console.WriteLine();
+                    Console.WriteLine("Please try again");
+                }
+            }
+            Console.WriteLine($"{newAlbum.Title} assigned to {bandForAlbum.Name}");
+            newAlbum.BandId = bandForAlbum.Id;
+            context.Albums.Add(newAlbum);
+            context.SaveChanges();
+            Console.WriteLine();
+            newAlbum.Description();
+            Console.WriteLine("Added to the database.");
+            Console.WriteLine();
+        }
+        static void ViewCurrentOrPastBandMembers()
+        {
+            var context = new RecordLabelContext();
+            Console.Clear();
+            var selectingBand = true;
+            var bandSelectionPastOrCurrent = new Band();
+            while (selectingBand)
+            {
+                Console.Write("Please select a band (Type the band's name then press Enter): ");
+                var bandSelection = Console.ReadLine();
+                if (context.Bands.FirstOrDefault(band => band.Name == bandSelection) != null)
+                {
+                    bandSelectionPastOrCurrent = context.Bands.FirstOrDefault(band => band.Name == bandSelection);
+                    selectingBand = false;
+                }
+                else
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("There is no band by that name in the database");
+                    Console.WriteLine();
+                    Console.WriteLine("Please try again");
+                }
+            }
+            var keepAskingPastOrCurrent = true;
+            while (keepAskingPastOrCurrent)
+            {
+                Console.Write("View (p)ast members or (c)urrent members (press p or c then press Enter): ");
+                var pastOrCurrentChoice = Console.ReadLine().ToLower();
+                if (pastOrCurrentChoice == "p")
+                {
+                    Console.Clear();
+                    var pastBandMembers = context.BandMembers.Include(bandMember => bandMember.Musician).Where(bandMember => bandMember.BandId == bandSelectionPastOrCurrent.Id && bandMember.CurrentMember == false);
+                    foreach (var bandMember in pastBandMembers)
+                    {
+                        bandMember.Musician.Description();
+                        keepAskingPastOrCurrent = false;
+                    }
+                }
+                else if (pastOrCurrentChoice == "c")
+                {
+                    var currentBandMembers = context.BandMembers.Include(bandMember => bandMember.Musician).Where(bandMember => bandMember.BandId == bandSelectionPastOrCurrent.Id && bandMember.CurrentMember == true);
+                    foreach (var bandMember in currentBandMembers)
+                    {
+                        bandMember.Musician.Description();
+                        keepAskingPastOrCurrent = false;
+                    }
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Try again");
+                    Console.WriteLine();
+                }
+            }
         }
         static void Greeting()
         {
@@ -397,9 +807,18 @@ namespace RhythmsGonnaGetYou
             var choice = Console.ReadLine().ToUpper();
             return choice;
         }
+        // --(1)Add a new band-X
+        // --(2)View all the bands-X
+        // --(3)Add an album for a band-X
+        // --(4)Add a song to an album-X
+        // --(5)Let a band go (update isSigned to false)-X
+        // --(6)Resign a band (update isSigned to true)-X
+        // --(7)Prompt for a band name and view all their albums-X
+        // --(8)View all albums ordered by ReleaseDate-X
+        // --(9)View all bands that are signed-X
+        // --(10)View all bands that are not signed-X
         static void Main(string[] args)
         {
-            var context = new RecordLabelContext();
             var applicationOpen = true;
             var counter = 0;
             Greeting();
@@ -408,196 +827,100 @@ namespace RhythmsGonnaGetYou
                 var menuSelection = Menu();
                 switch (menuSelection)
                 {
-                    case "1":
-                        Console.Clear();
-                        foreach (var band in context.Bands)
-                        {
-                            band.Description();
-                            Console.WriteLine();
-                        }
+                    case "1": // DONE
+                        ViewAllBands();
                         break;
-                    case "2":
-                        Console.Clear();
-                        foreach (var band in context.Bands.Where(band => band.IsSigned == true))
-                        {
-                            band.Description();
-                        }
+                    case "2": // DONE
+                        ViewAllBandsThatAreSigned();
                         break;
-                    case "3":
-                        Console.Clear();
-                        foreach (var band in context.Bands.Where(band => band.IsSigned == false))
-                        {
-                            band.Description();
-                        }
+                    case "3": // DONE
+                        ViewAllUnsignedBands();
                         break;
-                    case "4":
-                        Console.Clear();
-                        context.Bands.Add(CreateBand(context));
-                        context.SaveChanges();
+                    case "4": // DONE
+                        CreateBand();
                         break;
-                    case "5":
-                        Console.Clear();
-                        var selectedBandToLetGo = SelectABand(context);
-                        selectedBandToLetGo.LetBandGo();
-                        context.SaveChanges();
+                    case "5": // DONE
+                        LetBandGo();
                         break;
-                    case "6":
-                        Console.Clear();
-                        var selectedBandToResign = SelectABand(context);
-                        selectedBandToResign.ResignBand();
-                        context.SaveChanges();
+                    case "6": // DONE
+                        ResignBand();
                         break;
-                    case "7":
-                        Console.Clear();
-                        var keepAskingPastOrCurrent = true;
-                        var counterPastOrCurrent = 0;
-                        var bandSelectionPastOrCurrent = SelectABand(context);
-                        while (keepAskingPastOrCurrent)
-                        {
-                            Console.Write("View (p)ast members or (c)urrent members (press p or c then press Enter): ");
-                            var pastOrCurrentChoice = Console.ReadLine();
-                            if (pastOrCurrentChoice == "p")
-                            {
-                                Console.Clear();
-                                bandSelectionPastOrCurrent.ListPastBandMembers();
-                            }
-                            else if (pastOrCurrentChoice == "c")
-                            {
-                                Console.Clear();
-                                bandSelectionPastOrCurrent.ListCurrentBandMembers();
-                            }
-                            else if (counterPastOrCurrent > 3)
-                            {
-                                Console.Clear();
-                                Console.WriteLine("Quitting to the menu");
-                                Console.WriteLine();
-                                keepAskingPastOrCurrent = false;
-                            }
-                            else
-                            {
-                                Console.Clear();
-                                Console.WriteLine("Try again");
-                                counterPastOrCurrent += 1;
-                                Console.WriteLine();
-                            }
-                        }
+                    case "7": // DONE
+                        ViewCurrentOrPastBandMembers();
                         break;
-                    case "8":
-                        Console.Clear();
-                        var bandSelectionConcerts = SelectABand(context);
-                        bandSelectionConcerts.ListConcerts();
+                    case "8": // DONE
+                        ViewConcerts();
                         break;
-                    case "9":
-                        Console.Clear();
-                        Console.WriteLine("Album genre: ");
-                        var genreSelection = Console.ReadLine();
-                        var counterForGenreDisplay = 0;
-                        foreach (var album in context.Albums.Where(album => album.Genre == genreSelection))
-                        {
-                            Console.Write($"{counterForGenreDisplay}: ");
-                            album.Description();
-                            counterForGenreDisplay += 1;
-                        }
+                    case "9": // DONE
+                        ViewAlbumsInAGenre();
                         break;
-                    case "10":
-                        Console.Clear();
-                        var counterForOrderedDisplay = 0;
-                        foreach (var album in context.Albums.OrderBy(album => album.ReleaseDate))
-                        {
-                            Console.Write($"{counterForOrderedDisplay}: ");
-                            album.Description();
-                            counterForOrderedDisplay += 1;
-                        }
+                    case "10": // DONE
+                        ViewAlbumsOrderedByReleaseDate();
                         break;
-                    case "11":
-                        Console.Clear();
-                        var bandSelectionDisplayAlbums = SelectABand(context);
-                        foreach (var album in bandSelectionDisplayAlbums.Albums)
-                        {
-                            album.Description();
-                        }
+                    case "11": // DONE
+                        ViewAllBandsAlbums();
                         break;
-                    case "12":
-                        Console.Clear();
-                        context.Albums.Add(CreateAlbum(context));
-                        context.SaveChanges();
+                    case "12": // DONE
+                        CreateAlbum();
                         break;
-                    case "13":
-                        Console.Clear();
-                        context.Songs.Add(CreateSong(context));
-                        context.SaveChanges();
+                    case "13": // DONE
+                        CreateSong();
                         break;
-                    case "14":
-                        Console.Clear();
-                        var bandDisplaySongsOnAlbum = SelectABand(context);
-                        var albumDisplaySongsOnAlbum = SelectAnAlbum(context);
-                        albumDisplaySongsOnAlbum.ListSongs();
+                    case "14": // DONE
+                        ViewAlbumsSongs();
                         break;
-                    case "15":
-                        Console.Clear();
-                        foreach (var musician in context.Musicians.OrderBy(musician => musician.Name))
-                        {
-                            musician.Description();
-                        }
+                    case "15": // DONE
+                        ViewAllMusicians();
                         break;
-                    case "16":
-                        Console.Clear();
+                    // case "16":
+                    //     Console.Clear();
 
-                        var selectedBandMemberToBeAddedToBand = SelectABandMember(context);
-                        if (selectedBandMemberToBeAddedToBand != null)
-                        {
-                            selectedBandMemberToBeAddedToBand.AddMusicianBackToBand();
-                        }
-                        else
-                        {
-                            context.BandMembers.Add(CreateBandMember(context));
-                        }
-                        context.SaveChanges();
-                        break;
-                    case "17":
-                        Console.Clear();
-                        var selectedBandMemberToBeRemovedFromBand = SelectABandMember(context);
-                        if (selectedBandMemberToBeRemovedFromBand != null && selectedBandMemberToBeRemovedFromBand.CurrentMember == true)
-                        {
-                            selectedBandMemberToBeRemovedFromBand.RemoveMusicianFromBand();
-                        }
-                        else if (selectedBandMemberToBeRemovedFromBand != null && selectedBandMemberToBeRemovedFromBand.CurrentMember == false)
-                        {
-                            Console.WriteLine("Musician already removed from band");
-                        }
-                        else
-                        {
-                            Console.WriteLine("No musician by that name has ever been part of the band");
-                        }
-                        context.SaveChanges();
-                        break;
-                    case "18":
-                        Console.Clear();
-                        context.Musicians.Add(CreateMusician(context));
-                        context.SaveChanges();
-                        break;
-                    case "19":
-                        Console.Clear();
-                        var selectedMusicianForBandsDisplay = SelectAMusician(context);
-                        var counterForBandDisplay = 1;
-                        Console.WriteLine();
-                        Console.WriteLine("Displaying musician's bands");
-                        Console.WriteLine();
-                        foreach (var bandMember in selectedMusicianForBandsDisplay.BandMembers)
-                        {
-                            Console.Write($"{counterForBandDisplay}: ");
-                            Console.WriteLine($"{bandMember.Band.Name}");
-                            counterForBandDisplay += 1;
-                        }
-                        break;
-                    // case "20":
-                    //     Console.Clear();
+                    //     var selectedBandMemberToBeAddedToBand = SelectABandMember();
+                    //     if (selectedBandMemberToBeAddedToBand != null)
+                    //     {
+                    //         selectedBandMemberToBeAddedToBand.AddMusicianBackToBand();
+                    //     }
+                    //     else
+                    //     {
+                    //         context.BandMembers.Add(CreateBandMember(context));
+                    //     }
+                    //     context.SaveChanges();
                     //     break;
-                    // case "22":
+                    // case "17":
                     //     Console.Clear();
+                    //     var selectedBandMemberToBeRemovedFromBand = SelectABandMember();
+                    //     if (selectedBandMemberToBeRemovedFromBand != null && selectedBandMemberToBeRemovedFromBand.CurrentMember == true)
+                    //     {
+                    //         selectedBandMemberToBeRemovedFromBand.RemoveMusicianFromBand();
+                    //     }
+                    //     else if (selectedBandMemberToBeRemovedFromBand != null && selectedBandMemberToBeRemovedFromBand.CurrentMember == false)
+                    //     {
+                    //         Console.WriteLine("Musician already removed from band");
+                    //     }
+                    //     else
+                    //     {
+                    //         Console.WriteLine("No musician by that name has ever been part of the band");
+                    //     }
+                    //     context.SaveChanges();
                     //     break;
-                    // case "21":
+                    // case "18":
                     //     Console.Clear();
+                    //     context.Musicians.Add(CreateMusician(context));
+                    //     context.SaveChanges();
+                    //     break;
+                    // case "19":
+                    //     Console.Clear();
+                    //     var selectedMusicianForBandsDisplay = SelectAMusician(context);
+                    //     var counterForBandDisplay = 1;
+                    //     Console.WriteLine();
+                    //     Console.WriteLine("Displaying musician's bands");
+                    //     Console.WriteLine();
+                    //     foreach (var bandMember in selectedMusicianForBandsDisplay.BandMembers)
+                    //     {
+                    //         Console.Write($"{counterForBandDisplay}: ");
+                    //         Console.WriteLine($"{bandMember.Band.Name}");
+                    //         counterForBandDisplay += 1;
+                    //     }
                     //     break;
                     case "Q":
                         Console.Clear();
@@ -630,67 +953,3 @@ namespace RhythmsGonnaGetYou
         }
     }
 }
-
-
-
-//             var context = new SuncoastMoviesContext();
-//             var movies = context.Movies;
-//             var movieCount = movies.Count(); // Using Linq on DbSet retrieved from database
-//             Console.WriteLine($"There are {movieCount} movies!");
-//             var moviesWithRatings = context.Movies // makes a new collection of movies but each movie knows the associated Rating object
-//             .Include(movie => movie.Rating). // from our movie, please include the associated rating
-//             Include(movie => movie.Roles). // from our movie, please include the associated roles list
-//             ThenInclude(role => role.Actor); // THEN for each of the roles, please include associated actor object...join stmts in C# with includes, now we have access to all the data tables
-//             foreach (var movie in movies)
-//             {
-//                 if (movie.Rating == null)
-//                 {
-//                     Console.WriteLine($"There is an unrated movie named {movie.Title}");
-//                 }
-//                 else
-//                 {
-//                     Console.WriteLine($"Movie {movie.Title} - movie.Rating.Description");
-//                 }
-//             }
-//             foreach (var movie in movies)
-//             {
-//                 if (movie.Rating == null)
-//                 {
-//                     Console.WriteLine($"{movie.Title} - not rated");
-//                 }
-//                 else
-//                 {
-//                     Console.WriteLine($"{movie.Title} - {movie.Rating.Description}");
-//                 }
-//                 foreach (var role in movie.Roles)
-//                 {
-//                     Console.WriteLine($" - {role.CharacterName} played by {role.Actor.FullName}");
-//                 }
-//             }
-//             var newMovie = new Movie
-//             {
-//                 Title = "SpaceBalls",
-//                 PrimaryDirector = "Mel Brooks",
-//                 Genre = "Comedy",
-//                 YearReleased = 1987,
-//                 RatingId = 2
-//             };
-//             context.Movies.Add(newMovie); // DbSet can be treated like a list
-
-//             context.SaveChanges(); // Saves to database, must do this because it's hosted on a different computer, but add to the context (if not done, it will seriously slow down the program because it would have to connect with the database each time)
-//             // SaveChanges imparts atomicity
-//             var existingMovie = context.Movies.FirstOrDefault(movie => movie.Title == "SpaceBalls");
-//             if (existingMovie != null)
-//             {
-//                 existingMovie.Title = "SpaceBalls - the best movie ever";
-//                 context.SaveChanges();
-//             }
-//             var existingMovie2 = context.Movies.FirstOrDefault(movie => movie.Title == "Cujo");
-//             if (existingMovie2 != null)
-//             {
-//                 context.Movies.Remove(existingMovie2);
-//                 context.SaveChanges();
-//             }
-//         }
-//     }
-// }

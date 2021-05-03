@@ -147,13 +147,13 @@ VALUES (DATE, '', INT, INT);
 -------------------------------------------------------------
 -------------------------------------------------------------
 INSERT INTO "Musicians" ("Name", "Age", "MusicianPhoneNumber")
-VALUES ('', INT, TEXT);
+VALUES ('Brady Grapentine', 24, '6666666666');
 INSERT INTO "Musicians" ("Name", "Age", "MusicianPhoneNumber")
-VALUES ('', INT, TEXT);
+VALUES ('Gene Simmons', 60, '8888888888');
 INSERT INTO "Musicians" ("Name", "Age", "MusicianPhoneNumber")
-VALUES ('', INT, TEXT);
+VALUES ('John Doe', 26, '5558675309');
 INSERT INTO "Musicians" ("Name", "Age", "MusicianPhoneNumber")
-VALUES ('', INT, TEXT);
+VALUES ('Jane Doe', 28, '4444444444');
 INSERT INTO "Musicians" ("Name", "Age", "MusicianPhoneNumber")
 VALUES ('', INT, TEXT);
 INSERT INTO "Musicians" ("Name", "Age", "MusicianPhoneNumber")
@@ -172,24 +172,24 @@ INSERT INTO "Musicians" ("Name", "Age", "MusicianPhoneNumber")
 VALUES ('', INT, TEXT);
 -------------------------------------------------------------
 -------------------------------------------------------------
-INSERT INTO "BandMembers" ("BandId", "MusicianId")
-VALUES (INT, INT);
-INSERT INTO "BandMembers" ("BandId", "MusicianId")
-VALUES (INT, INT);
-INSERT INTO "BandMembers" ("BandId", "MusicianId")
-VALUES (INT, INT);
-INSERT INTO "BandMembers" ("BandId", "MusicianId")
-VALUES (INT, INT);
-INSERT INTO "BandMembers" ("BandId", "MusicianId")
-VALUES (INT, INT);
-INSERT INTO "BandMembers" ("BandId", "MusicianId")
-VALUES (INT, INT);
-INSERT INTO "BandMembers" ("BandId", "MusicianId")
-VALUES (INT, INT);
-INSERT INTO "BandMembers" ("BandId", "MusicianId")
-VALUES (INT, INT);
-INSERT INTO "BandMembers" ("BandId", "MusicianId")
-VALUES (INT, INT);
+INSERT INTO "BandMembers" ("BandId", "MusicianId", "CurrentMember")
+VALUES (1, 1, TRUE);
+INSERT INTO "BandMembers" ("BandId", "MusicianId", "CurrentMember")
+VALUES (1, 3, TRUE);
+INSERT INTO "BandMembers" ("BandId", "MusicianId", "CurrentMember")
+VALUES (2, 2, TRUE);
+INSERT INTO "BandMembers" ("BandId", "MusicianId", "CurrentMember")
+VALUES (2, 4, TRUE);
+INSERT INTO "BandMembers" ("BandId", "MusicianId", "CurrentMember")
+VALUES (1, 4, FALSE);
+INSERT INTO "BandMembers" ("BandId", "MusicianId", "CurrentMember")
+VALUES (1, 2, FALSE);
+INSERT INTO "BandMembers" ("BandId", "MusicianId", "CurrentMember")
+VALUES (2, 3, FALSE);
+INSERT INTO "BandMembers" ("BandId", "MusicianId", "CurrentMember")
+VALUES (2, 1, FALSE);
+INSERT INTO "BandMembers" ("BandId", "MusicianId", "CurrentMember")
+VALUES (INT, );
 INSERT INTO "BandMembers" ("BandId", "MusicianId")
 VALUES (INT, INT);
 INSERT INTO "BandMembers" ("BandId", "MusicianId")
