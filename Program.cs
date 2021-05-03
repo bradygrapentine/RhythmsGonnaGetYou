@@ -158,7 +158,7 @@ namespace RhythmsGonnaGetYou
         //----------------------------------------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------------------------------------
         //----------------------------------------------------------------------------------------------------------------
-        private static void LetBandGo()
+        static void LetBandGo()
         {
             var context = new RecordLabelContext();
             Console.Clear();
@@ -186,7 +186,7 @@ namespace RhythmsGonnaGetYou
             Console.WriteLine("Band no longer signed to label");
             context.SaveChanges();
         }
-        private static void ResignBand()
+        static void ResignBand()
         {
             var context = new RecordLabelContext();
             Console.Clear();
@@ -242,6 +242,12 @@ namespace RhythmsGonnaGetYou
                         Console.WriteLine("Reinstating musician in band");
                         context.SaveChanges();
                     }
+                    else if (musicianCounter > 3)
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("Quitting to menu");
+                        selectingMusician = false;
+                    }
                     else if (selectedBand != null && selectedBand.CurrentMember == true)
                     {
                         Console.WriteLine();
@@ -263,12 +269,6 @@ namespace RhythmsGonnaGetYou
                         context.SaveChanges();
                         selectingMusician = false;
                     }
-                    else if (musicianCounter > 3)
-                    {
-                        Console.WriteLine();
-                        Console.WriteLine("Quitting to menu");
-                        selectingMusician = false;
-                    }
                     else
                     {
                         Console.WriteLine();
@@ -279,6 +279,12 @@ namespace RhythmsGonnaGetYou
 
                     }
                 }
+                else if (musicianCounter > 3)
+                {
+                    Console.WriteLine();
+                    Console.WriteLine("Quitting to menu");
+                    selectingMusician = false;
+                }
                 else if (selectedMusician == null)
                 {
                     Console.WriteLine();
@@ -286,12 +292,6 @@ namespace RhythmsGonnaGetYou
                     Console.WriteLine();
                     Console.WriteLine("Please try again");
                     musicianCounter += 1;
-                }
-                else if (musicianCounter > 3)
-                {
-                    Console.WriteLine();
-                    Console.WriteLine("Quitting to menu");
-                    selectingMusician = false;
                 }
             }
         }
@@ -319,14 +319,8 @@ namespace RhythmsGonnaGetYou
                         Console.Write("Please select a band (Type the musician's name then press Enter): ");
                         var bandSelection = Console.ReadLine();
                         var selectedBand = bandList.FirstOrDefault(bandMember => bandMember.Band.Name == bandSelection);
-                        if (selectedBand != null && selectedBand.CurrentMember == false)
-                        {
-                            Console.WriteLine("Musician not a member of band");
-                            Console.WriteLine();
-                            Console.WriteLine("Please try again");
-                            bandCounter += 1;
-                        }
-                        else if (selectedBand != null && selectedBand.CurrentMember == true)
+
+                        if (selectedBand != null && selectedBand.CurrentMember == true)
                         {
                             Console.WriteLine("Removing musician from band");
                             selectedBand.CurrentMember = false;
@@ -341,10 +335,17 @@ namespace RhythmsGonnaGetYou
                             selectingBand = false;
                             selectingMusician = false;
                         }
+                        else if (selectedBand != null && selectedBand.CurrentMember == false)
+                        {
+                            Console.WriteLine("Musician not a member of band");
+                            Console.WriteLine();
+                            Console.WriteLine("Please try again");
+                            bandCounter += 1;
+                        }
                         else
                         {
                             Console.WriteLine();
-                            Console.WriteLine("There is no band by that name in the database");
+                            Console.WriteLine($"Either that band is not in the data base or {selectedMusician.Name} has never been a member of that band");
                             Console.WriteLine();
                             Console.WriteLine("Please try again");
                             bandCounter += 1;
@@ -399,6 +400,8 @@ namespace RhythmsGonnaGetYou
         }
         static void CreateMusician()
         {
+            Console.Clear();
+            Console.WriteLine();
             var context = new RecordLabelContext();
             Musician newMusician = new Musician();
             Console.Write("Type the new musician's name and press Enter: ");
@@ -537,7 +540,8 @@ namespace RhythmsGonnaGetYou
             foreach (var bandMember in musiciansBands)
             {
                 Console.Write($"{counterForBandDisplay}: ");
-                Console.WriteLine($"{bandMember.Band.Name}");
+                Console.Write($"{bandMember.Band.Name}");
+                Console.WriteLine($", Current Member: {bandMember.CurrentMember}");
                 counterForBandDisplay += 1;
             }
         }
@@ -639,7 +643,11 @@ namespace RhythmsGonnaGetYou
             foreach (var band in context.Bands.Include(band => band.BandMembers))
             {
                 band.Description();
-                Console.WriteLine($"Band Member Count: {band.BandMembers.Count()}");
+                if (band.BandMembers.Count() > 0)
+                {
+                    Console.WriteLine($"Band Member Count: {band.BandMembers.Where(bandMember => bandMember.CurrentMember == true).Count()}");
+                    Console.WriteLine();
+                }
                 Console.WriteLine();
             }
         }
@@ -647,10 +655,14 @@ namespace RhythmsGonnaGetYou
         {
             var context = new RecordLabelContext();
             Console.Clear();
-            foreach (var band in context.Bands.Where(band => band.IsSigned == true))
+            foreach (var band in context.Bands.Include(band => band.BandMembers).Where(band => band.IsSigned == true))
             {
                 band.Description();
-                Console.WriteLine($"Band Member Count: {band.BandMembers.Count()}");
+                if (band.BandMembers.Count() > 0)
+                {
+                    Console.WriteLine($"Band Member Count: {band.BandMembers.Where(bandMember => bandMember.CurrentMember == true).Count()}");
+                    Console.WriteLine();
+                }
                 Console.WriteLine();
             }
         }
@@ -658,10 +670,14 @@ namespace RhythmsGonnaGetYou
         {
             var context = new RecordLabelContext();
             Console.Clear();
-            foreach (var band in context.Bands.Where(band => band.IsSigned == false))
+            foreach (var band in context.Bands.Include(band => band.BandMembers).Where(band => band.IsSigned == false))
             {
                 band.Description();
-                Console.WriteLine($"Band Member Count: {band.BandMembers.Count()}");
+                if (band.BandMembers.Count() > 0)
+                {
+                    Console.WriteLine($"Band Member Count: {band.BandMembers.Where(bandMember => bandMember.CurrentMember == true).Count()}");
+                    Console.WriteLine();
+                }
                 Console.WriteLine();
             }
         }
@@ -730,7 +746,7 @@ namespace RhythmsGonnaGetYou
             var selectingBandConcerts = true;
             while (selectingBandConcerts)
             {
-                Console.Write("Please select a band to assign the album to (Type the band's name then press Enter): ");
+                Console.Write("Please select a band (Type the band's name then press Enter): ");
                 var bandSelection = Console.ReadLine();
                 if (context.Bands.FirstOrDefault(band => band.Name == bandSelection) != null)
                 {
